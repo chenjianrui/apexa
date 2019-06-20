@@ -7,6 +7,7 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/styles';
 import Container from '@material-ui/core/Container';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import Dialog from '../../components/Dialog/Dialog';
@@ -68,6 +69,9 @@ const styles = {
   cancel: {
     background: '#fff !important',
     color: '#cccccc !important'
+  },
+  circularProgress: {
+    color: '#fff'
   }
 };
 class Forgot extends Component {
@@ -89,7 +93,10 @@ class Forgot extends Component {
   handleSubmit = e => {
     const { email } = this.state;
     e.preventDefault();
-    if (email === '') {
+    if (
+      email === '' ||
+      email.search(/^([\w\.\-]){1,64}\@([\w\.\-]){1,64}$/) === -1
+    ) {
       this.setState(prevState => ({
         isEmpty: true
       }));
@@ -103,7 +110,7 @@ class Forgot extends Component {
         email
       })
       .then(response => {
-        this.setState({ open: true });
+        this.setState({ open: true, disabled: false });
         console.log(response);
       })
       .catch(error =>
@@ -114,6 +121,7 @@ class Forgot extends Component {
     this.setState(prevState => ({
       open: !prevState.open
     }));
+    this.props.history.push('/login');
   };
   render() {
     const { classes } = this.props;
@@ -172,7 +180,14 @@ class Forgot extends Component {
                     variant="contained"
                     disabled={disabled}
                   >
-                    {disabled ? '發送中…' : '確認'}
+                    {disabled ? (
+                      <CircularProgress
+                        className={classes.circularProgress}
+                        size={25}
+                      />
+                    ) : (
+                      '確認'
+                    )}
                   </Button>
                 </Grid>
               </Grid>
