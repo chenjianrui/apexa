@@ -7,8 +7,10 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/styles';
 import Container from '@material-ui/core/Container';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+import Dialog from '../../components/Dialog/Dialog';
 
 const styles = {
   textField: {
@@ -76,6 +78,9 @@ const styles = {
       padding: '0 10px',
       color: '#999999'
     }
+  },
+  circularProgress: {
+    color: '#fff'
   }
 };
 
@@ -84,7 +89,8 @@ class Login extends Component {
     email: '',
     password: '',
     isEmpty: false,
-    disabled: false
+    disabled: false,
+    open: false
   };
 
   handleChange = name => event => {
@@ -97,9 +103,13 @@ class Login extends Component {
   };
 
   handleSubmit = e => {
-    const { email, password, disabled } = this.state;
+    const { email, password } = this.state;
     e.preventDefault();
-    if (email === '' || password === '') {
+    if (
+      email === '' ||
+      password === '' ||
+      email.search(/^([\w\.\-]){1,64}\@([\w\.\-]){1,64}$/) === -1
+    ) {
       this.setState(prevState => ({
         isEmpty: true
       }));
@@ -115,15 +125,21 @@ class Login extends Component {
       })
       .then(response => console.log(response))
       .catch(error => this.setState({ isEmpty: true, disabled: false }));
-    console.log(this.state);
   };
 
   handleFBLogin = () => {
-    console.log('FBLogin');
+    this.setState(prevState => ({
+      open: !prevState.open
+    }));
+  };
+  handleDialogToggle = () => {
+    this.setState(prevState => ({
+      open: !prevState.open
+    }));
   };
 
   render() {
-    const { isEmpty, disabled } = this.state;
+    const { isEmpty, disabled, open } = this.state;
     const { classes } = this.props;
     return (
       <div className="login-bgImage">
@@ -138,7 +154,7 @@ class Login extends Component {
               登入
             </Typography>
             {isEmpty ? (
-              <p style={{ color: 'red' }}>您的郵件帳號或密碼不正確</p>
+              <p style={{ color: '#f26a55' }}>您的郵件帳號或密碼不正確</p>
             ) : null}
             <form noValidate onSubmit={this.handleSubmit}>
               <TextField
@@ -172,11 +188,18 @@ class Login extends Component {
                 className={classes.submit}
                 disabled={disabled}
               >
-                {disabled ? '登入中…' : '登入'}
+                {disabled ? (
+                  <CircularProgress
+                    className={classes.circularProgress}
+                    size={25}
+                  />
+                ) : (
+                  '登入'
+                )}
               </Button>
               <Grid container>
                 <Grid item xs={12} className={classes.forgetLink}>
-                  <Link to="/forget">忘記密碼</Link>
+                  <Link to="/forgot">忘記密碼</Link>
                 </Grid>
                 <Grid item sm={12} xs={12}>
                   <div className={classes.line}>
@@ -188,7 +211,7 @@ class Login extends Component {
                   type="button"
                   fullWidth
                   variant="contained"
-                  onClick={this.handleFBLogin}
+                  onClick={this.handleDialogToggle}
                   className={classes.facebook}
                 >
                   Facebook
@@ -197,6 +220,13 @@ class Login extends Component {
             </form>
           </div>
         </Container>
+        <Dialog
+          open={open}
+          sm={true}
+          text="你沒有朋友。"
+          handleClose={this.handleDialogToggle}
+          buttonText="確認"
+        />
       </div>
     );
   }
