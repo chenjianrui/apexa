@@ -8,9 +8,12 @@ import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/styles';
 import Container from '@material-ui/core/Container';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import iconFB from '../../assets/images/ic_facebook.png';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import Dialog from '../../components/Dialog/Dialog';
+import { login } from '../../store/actions/auth';
+import { connect } from 'react-redux';
 
 const styles = {
   textField: {
@@ -24,7 +27,8 @@ const styles = {
       borderColor: '#333333'
     },
     '& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline': {
-      borderColor: '#333333'
+      borderColor: '#333333',
+      borderWidth: '1px'
     }
   },
   root: {
@@ -81,6 +85,11 @@ const styles = {
   },
   circularProgress: {
     color: '#fff'
+  },
+  iconFB: {
+    width: '20px',
+    height: '20px',
+    marginRight: '20px'
   }
 };
 
@@ -89,9 +98,18 @@ class Login extends Component {
     email: '',
     password: '',
     isEmpty: false,
-    disabled: false,
     open: false
   };
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevProps.error !== this.props.error) {
+      if (this.props.error) {
+        this.setState({ isEmpty: true });
+      } else {
+        this.setState({ isEmpty: false });
+      }
+    }
+  }
 
   handleChange = name => event => {
     if (event.target.value !== '') {
@@ -110,21 +128,12 @@ class Login extends Component {
       password === '' ||
       email.search(/^([\w\.\-]){1,64}\@([\w\.\-]){1,64}$/) === -1
     ) {
-      this.setState(prevState => ({
+      this.setState({
         isEmpty: true
-      }));
+      });
       return;
     }
-    this.setState({
-      disabled: true
-    });
-    axios
-      .post('https://api.mjairql.com/api/v2/login', {
-        email,
-        password
-      })
-      .then(response => console.log(response))
-      .catch(error => this.setState({ isEmpty: true, disabled: false }));
+    this.props.login(email, password);
   };
 
   handleFBLogin = () => {
@@ -139,10 +148,15 @@ class Login extends Component {
   };
 
   render() {
-    const { isEmpty, disabled, open } = this.state;
-    const { classes } = this.props;
+    const { open, isEmpty } = this.state;
+    const { classes, loading, isAuthenticate, error } = this.props;
+    let authRedirect = null;
+    if (isAuthenticate) {
+      authRedirect = <Redirect to="/" />;
+    }
     return (
       <div className="login-bgImage">
+        {authRedirect}
         <Container component="main" maxWidth="xs" className={classes.root}>
           <CssBaseline />
           <div>
@@ -186,9 +200,9 @@ class Login extends Component {
                 fullWidth
                 variant="contained"
                 className={classes.submit}
-                disabled={disabled}
+                disabled={loading}
               >
-                {disabled ? (
+                {loading ? (
                   <CircularProgress
                     className={classes.circularProgress}
                     size={25}
@@ -214,6 +228,7 @@ class Login extends Component {
                   onClick={this.handleDialogToggle}
                   className={classes.facebook}
                 >
+                  <img src={iconFB} ale="icon_FB" className={classes.iconFB} />
                   Facebook
                 </Button>
               </Grid>
@@ -232,4 +247,21 @@ class Login extends Component {
   }
 }
 
-export default withStyles(styles)(Login);
+const mapStateToProps = state => {
+  return {
+    loading: state.auth.loading,
+    isAuthenticate: state.auth.token !== null,
+    error: state.auth.error
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    login: (email, password) => dispatch(login(email, password))
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withStyles(styles)(Login));

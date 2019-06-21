@@ -24,7 +24,8 @@ const styles = {
       borderColor: '#333333'
     },
     '& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline': {
-      borderColor: '#333333'
+      borderColor: '#333333',
+      borderWidth: '1px'
     }
   },
   root: {
@@ -77,7 +78,7 @@ const styles = {
 class Forgot extends Component {
   state = {
     email: '',
-    disabled: false,
+    loading: false,
     isEmpty: false,
     open: false
   };
@@ -91,8 +92,8 @@ class Forgot extends Component {
     }
   };
   handleSubmit = e => {
-    const { email } = this.state;
     e.preventDefault();
+    const { email } = this.state;
     if (
       email === '' ||
       email.search(/^([\w\.\-]){1,64}\@([\w\.\-]){1,64}$/) === -1
@@ -103,18 +104,18 @@ class Forgot extends Component {
       return;
     }
     this.setState({
-      disabled: true
+      loading: true
     });
     axios
       .post('https://api.mjairql.com/api/v2/forgotPassword', {
         email
       })
       .then(response => {
-        this.setState({ open: true, disabled: false });
+        this.setState({ open: true, loading: false });
         console.log(response);
       })
       .catch(error =>
-        this.setState({ isEmpty: true, disabled: false, open: false })
+        this.setState({ isEmpty: true, loading: false, open: false })
       );
   };
   handleClose = () => {
@@ -125,7 +126,7 @@ class Forgot extends Component {
   };
   render() {
     const { classes } = this.props;
-    const { disabled, isEmpty, open } = this.state;
+    const { loading, isEmpty, open } = this.state;
     return (
       <Container className="login-bgImage">
         <Container component="main" maxWidth="xs" className={classes.root}>
@@ -167,7 +168,7 @@ class Forgot extends Component {
                       fullWidth
                       variant="contained"
                       className={classes.cancel}
-                      disabled={disabled}
+                      disabled={loading}
                     >
                       取消
                     </Button>
@@ -178,9 +179,9 @@ class Forgot extends Component {
                     type="submit"
                     fullWidth
                     variant="contained"
-                    disabled={disabled}
+                    disabled={loading}
                   >
-                    {disabled ? (
+                    {loading ? (
                       <CircularProgress
                         className={classes.circularProgress}
                         size={25}

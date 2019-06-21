@@ -5,17 +5,15 @@ import React, { Component } from 'react';
 
 class Dashboard extends Component {
   componentDidMount() {
-    const token = JSON.parse(localStorage.getItem('token'));
+    const token = localStorage.getItem('token');
     if (!token) {
       this.props.history.push('/login');
     }
   }
   render() {
-    console.log(this.props);
     return (
-      <div className={this.props.className}>
+      <div>
         <h1>Dashboard</h1>
-        <button onClick={this.props.clicked}>Logout</button>
       </div>
     );
   }

@@ -1,7 +1,18 @@
 import React, { Component } from 'react';
-import NavBar from './components/NavBar/NavBar';
+import './index.css';
+// import NavBar from './components/NavBar/NavBar';
 import Chart from './components/Chart';
-import Switch from '@material-ui/core/Switch';
+// import Switch from '@material-ui/core/Switch';
+// import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Dashboard from './containers/Dashboard/Dashboard';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import Navbar from './components/NavBar/NavBar';
+import Login from './containers/Auth/Login';
+import Forgot from './containers/Auth/Forgot';
+import Edit from './containers/Auth/Edit';
+import Logout from './containers/Auth/Logout';
+import { connect } from 'react-redux';
+import { authCheckState } from './store/actions/auth';
 
 class App extends Component {
   state = {
@@ -92,7 +103,8 @@ class App extends Component {
       }
     ],
     changeType: false,
-    modeType: false
+    modeType: false,
+    auth: false
   };
   handleChange = e => {
     console.log(e.target.value);
@@ -106,71 +118,139 @@ class App extends Component {
       }
     });
   };
+
+  componentDidMount() {
+    this.props.authCheckState();
+  }
+  // componentDidUpdate(prevState, prevProps) {
+  //   if (this.state.modeType) {
+  //     document.body.style.background = '#555';
+  //   } else {
+  //     document.body.style.background = '#fff';
+  //   }
+  // }
   // 暗黑 mode
+  // handleChangeMode = name => event => {
+  //   this.setState(
+  //     {
+  //       ...this.state.modeType,
+  //       [name]: event.target.checked
+  //     },
+  //     () => {
+  //       this.setState({
+  //         options: {
+  //           ...this.state.options,
+  //           theme: {
+  //             ...this.state.options.theme,
+  //             mode: this.state.modeType ? 'dark' : 'light'
+  //           }
+  //         }
+  //       });
+  //     }
+  //   );
+  // };
   handleChangeMode = name => event => {
-    this.setState(
-      {
-        ...this.state.modeType,
-        [name]: event.target.checked
-      },
-      () => {
-        this.setState({
-          options: {
-            ...this.state.options,
-            theme: {
-              ...this.state.options.theme,
-              mode: this.state.modeType ? 'dark' : 'light'
-            }
-          }
-        });
+    this.setState({
+      [name]: event.target.checked,
+      options: {
+        ...this.state.options,
+        theme: {
+          ...this.state.options.theme,
+          mode: event.target.checked ? 'dark' : 'light'
+        }
       }
-    );
+    });
+  };
+  handleClick = data => {
+    console.log(data);
+  };
+
+  handleTest = () => {
+    console.log('hi');
   };
 
   render() {
-    const { options, series, width, height } = this.state;
-    const data = [
-      [30, 40, 45, 50, 49, 60, 70, 91],
-      [15, 54, 150, 250, 500, 11, 56, 250]
-    ];
-    let chart = data.map((item, index) => {
-      return (
-        <>
-          <Chart
-            options={options}
-            series={[
-              {
-                name: index,
-                data: item
-              }
-            ]}
-            width={width}
-            height={height}
-            type={this.state.options.chart.type}
-          />
-        </>
-      );
-    });
+    // const { options, series, width, height } = this.state;
+    // const data = [
+    //   [30, 40, 45, 50, 49, 60, 70, 91],
+    //   [15, 54, 150, 250, 500, 11, 56, 250],
+    //   [15, 5, 10, 50, 500, 11, 56, 250]
+    // ];
+    // let chart = data.map((item, index) => {
+    //   return (
+    //     <>
+    //       <Chart
+    //         options={options}
+    //         series={[
+    //           {
+    //             name: index,
+    //             data: item
+    //           }
+    //         ]}
+    //         width={width}
+    //         height={height}
+    //         type={this.state.options.chart.type}
+    //       />
+    //     </>
+    //   );
+    // });
     return (
-      <div>
-        <NavBar onSelect={this.handleSelect} />
-
-        {chart}
-
-        <select onChange={this.handleChange}>
-          <option value="area">area</option>
-          <option value="bar">bar</option>
-        </select>
-
-        <Switch
-          checked={this.state.modeType}
-          onChange={this.handleChangeMode('modeType')}
-          value="modeType"
-          inputProps={{ 'aria-label': 'secondary checkbox1' }}
+      <BrowserRouter>
+        <Navbar
+          isAuthenticate={this.props.isAuthenticate}
+          userData={this.props.userData}
         />
-      </div>
+        <Switch>
+          <Route path="/" exact component={Dashboard} />
+          <Route path="/login" component={Login} />
+          <Route path="/forgot" component={Forgot} />
+          <Route path="/edit" component={Edit} />
+          <Route path="/logout" component={Logout} />
+        </Switch>
+        {/* <Dashboard /> */}
+      </BrowserRouter>
+      // <div>
+      //   <Dashboard />
+      //   <NavBar onSelect={this.handleSelect} />
+
+      //   {chart}
+
+      //   <select onChange={this.handleChange}>
+      //     <option value="area">area</option>
+      //     <option value="bar">bar</option>
+      //   </select>
+
+      //   <FormControlLabel
+      //     control={
+      //       <Switch
+      //         checked={this.state.modeType}
+      //         onChange={this.handleChangeMode('modeType')}
+      //         value="modeType"
+      //         inputProps={{ 'aria-label': 'secondary checkbox1' }}
+      //         color="default"
+      //       />
+      //     }
+      //     label="模式"
+      //   />
+      // </div>
     );
   }
 }
 
-export default App;
+const mapStateToProps = state => {
+  return {
+    isAuthenticate: state.auth.token !== null,
+    userData: state.auth.userData
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    authCheckState: () => dispatch(authCheckState())
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(App);
