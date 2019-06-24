@@ -5,7 +5,7 @@ import Chart from './components/Chart';
 // import Switch from '@material-ui/core/Switch';
 // import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Dashboard from './containers/Dashboard/Dashboard';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
 import Navbar from './components/NavBar/NavBar';
 import Login from './containers/Auth/Login';
 import Forgot from './containers/Auth/Forgot';
@@ -170,6 +170,7 @@ class App extends Component {
   };
 
   render() {
+    console.log(this.props);
     // const { options, series, width, height } = this.state;
     // const data = [
     //   [30, 40, 45, 50, 49, 60, 70, 91],
@@ -195,7 +196,7 @@ class App extends Component {
     //   );
     // });
     return (
-      <BrowserRouter>
+      <BrowserRouter basename="/apexa">
         <Navbar
           isAuthenticate={this.props.isAuthenticate}
           userData={this.props.userData}
@@ -204,7 +205,7 @@ class App extends Component {
           <Route path="/" exact component={Dashboard} />
           <Route path="/login" component={Login} />
           <Route path="/forgot" component={Forgot} />
-          <Route path="/edit" component={Edit} />
+          <Route path="/edit" component={Dashboard} />
           <Route path="/logout" component={Logout} />
         </Switch>
         {/* <Dashboard /> */}
@@ -240,7 +241,8 @@ class App extends Component {
 const mapStateToProps = state => {
   return {
     isAuthenticate: state.auth.token !== null,
-    userData: state.auth.userData
+    userData:
+      state.auth.userData || JSON.parse(localStorage.getItem('userData'))
   };
 };
 

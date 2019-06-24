@@ -11,6 +11,8 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import Dialog from '../../components/Dialog/Dialog';
+import { fetchForgot } from '../../store/actions/auth';
+import { connect } from 'react-redux';
 
 const styles = {
   textField: {
@@ -78,10 +80,22 @@ const styles = {
 class Forgot extends Component {
   state = {
     email: '',
-    loading: false,
     isEmpty: false,
     open: false
   };
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevProps.error !== this.props.error) {
+      if (this.props.error) {
+        this.setState({ isEmpty: true });
+      } else {
+        this.setState({ isEmpty: false });
+      }
+    }
+    if (prevProps.forgotState !== this.props.forgotState) {
+      this.setState({ open: true });
+    }
+  }
 
   handleChange = name => event => {
     if (event.target.value !== '') {
@@ -103,20 +117,7 @@ class Forgot extends Component {
       }));
       return;
     }
-    this.setState({
-      loading: true
-    });
-    axios
-      .post('https://api.mjairql.com/api/v2/forgotPassword', {
-        email
-      })
-      .then(response => {
-        this.setState({ open: true, loading: false });
-        console.log(response);
-      })
-      .catch(error =>
-        this.setState({ isEmpty: true, loading: false, open: false })
-      );
+    this.props.fetchForgot(email);
   };
   handleClose = () => {
     this.setState(prevState => ({
@@ -125,86 +126,105 @@ class Forgot extends Component {
     this.props.history.push('/login');
   };
   render() {
-    const { classes } = this.props;
-    const { loading, isEmpty, open } = this.state;
+    const { classes, loading } = this.props;
+    const { isEmpty, open } = this.state;
     return (
-      <Container className="login-bgImage">
-        <Container component="main" maxWidth="xs" className={classes.root}>
-          <CssBaseline />
-          <div>
-            <Typography
-              className={classes.typography}
-              component="h1"
-              variant="h5"
-            >
-              忘記密碼
-            </Typography>
-            <p style={{ color: '#666666' }}>
-              我們將寄送密碼重設信件至您的電子郵件信箱，點入信件中的驗證連結按鈕後，即可變更您的密碼。
-            </p>
-            <form noValidate onSubmit={this.handleSubmit}>
-              <TextField
-                variant="outlined"
-                margin="dense"
-                fullWidth
-                id="email"
-                label="Email"
-                name="email"
-                autoComplete="email"
-                autoFocus
-                className={classes.textField}
-                onChange={this.handleChange('email')}
-              />
-              {isEmpty ? (
-                <p style={{ color: '#f26a55', margin: '10px 0 0' }}>
-                  請輸入有效信箱
-                </p>
-              ) : null}
-              <Grid container>
-                <Grid item xs={6} className={classes.grid}>
-                  <Link to="/login">
+      <div className="login-bgImage">
+        <Container>
+          <Container component="main" maxWidth="xs" className={classes.root}>
+            <CssBaseline />
+            <div>
+              <Typography
+                className={classes.typography}
+                component="h1"
+                variant="h5"
+              >
+                忘記密碼
+              </Typography>
+              <p style={{ color: '#666666' }}>
+                我們將寄送密碼重設信件至您的電子郵件信箱，點入信件中的驗證連結按鈕後，即可變更您的密碼。
+              </p>
+              <form noValidate onSubmit={this.handleSubmit}>
+                <TextField
+                  variant="outlined"
+                  margin="dense"
+                  fullWidth
+                  id="email"
+                  label="Email"
+                  name="email"
+                  autoComplete="email"
+                  autoFocus
+                  className={classes.textField}
+                  onChange={this.handleChange('email')}
+                />
+                {isEmpty ? (
+                  <p style={{ color: '#f26a55', margin: '10px 0 0' }}>
+                    請輸入有效信箱
+                  </p>
+                ) : null}
+                <Grid container>
+                  <Grid item xs={6} className={classes.grid}>
+                    <Link to="/login">
+                      <Button
+                        type="button"
+                        fullWidth
+                        variant="contained"
+                        className={classes.cancel}
+                        disabled={loading}
+                      >
+                        取消
+                      </Button>
+                    </Link>
+                  </Grid>
+                  <Grid item xs={6} className={classes.grid}>
                     <Button
-                      type="button"
+                      type="submit"
                       fullWidth
                       variant="contained"
-                      className={classes.cancel}
                       disabled={loading}
                     >
-                      取消
+                      {loading ? (
+                        <CircularProgress
+                          className={classes.circularProgress}
+                          size={25}
+                        />
+                      ) : (
+                        '確認'
+                      )}
                     </Button>
-                  </Link>
+                  </Grid>
                 </Grid>
-                <Grid item xs={6} className={classes.grid}>
-                  <Button
-                    type="submit"
-                    fullWidth
-                    variant="contained"
-                    disabled={loading}
-                  >
-                    {loading ? (
-                      <CircularProgress
-                        className={classes.circularProgress}
-                        size={25}
-                      />
-                    ) : (
-                      '確認'
-                    )}
-                  </Button>
-                </Grid>
-              </Grid>
-            </form>
-          </div>
+              </form>
+            </div>
+          </Container>
+          <Dialog
+            open={open}
+            sm={true}
+            handleClose={this.handleClose}
+            text="密碼重設信件已寄出，請至您的信箱進行驗證。"
+            buttonText="確認"
+          />
         </Container>
-        <Dialog
-          open={open}
-          sm={true}
-          handleClose={this.handleClose}
-          text="密碼重設信件已寄出，請至您的信箱進行驗證。"
-          buttonText="確認"
-        />
-      </Container>
+      </div>
     );
   }
 }
 
-export default withStyles(styles)(Forgot);
+const mapStateToProps = state => {
+  return {
+    loading: state.auth.loading,
+    error: state.auth.forgotError,
+    forgotState: state.auth.forgotState
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    fetchForgot: email => dispatch(fetchForgot(email))
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withStyles(styles)(Forgot));

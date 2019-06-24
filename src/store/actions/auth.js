@@ -24,18 +24,18 @@ export const login = (email, password) => dispatch => {
         JSON.stringify(response.data.success.userData)
       );
       dispatch({
-        type: actionTypes.AUTH_SUCCESS,
+        type: actionTypes.AUTH_LOGIN_SUCCESS,
         payload: response.data.success
       });
     })
     .catch(error => {
-      dispatch({ type: actionTypes.AUTH_FAIL });
+      dispatch({ type: actionTypes.AUTH_LOGIN_FAIL });
     });
 };
 
 export const loginStart = () => {
   return {
-    type: actionTypes.AUTH_START
+    type: actionTypes.AUTH_LOGIN_START
   };
 };
 
@@ -46,6 +46,27 @@ export const authCheckState = () => dispatch => {
   } else {
     const userData = JSON.parse(localStorage.getItem('userData'));
     console.log(userData);
-    dispatch({ type: actionTypes.AUTH_SUCCESS, payload: userData });
+    dispatch({ type: actionTypes.AUTH_LOGIN_SUCCESS, payload: userData });
   }
+};
+
+export const forgotStart = () => {
+  return {
+    type: actionTypes.AUTH_FORGOT_START
+  };
+};
+
+export const fetchForgot = email => dispatch => {
+  dispatch(forgotStart());
+  axios
+    .post('https://api.mjairql.com/api/v2/forgotPassword', {
+      email
+    })
+    .then(response => {
+      dispatch({
+        type: actionTypes.AUTH_FORGOT_SUCCESS,
+        payload: response.data.success
+      });
+    })
+    .catch(error => dispatch({ type: actionTypes.AUTH_FORGOT_FAIL }));
 };

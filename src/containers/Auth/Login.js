@@ -2,14 +2,12 @@ import React, { Component } from 'react';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
-// import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/styles';
 import Container from '@material-ui/core/Container';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import iconFB from '../../assets/images/ic_facebook.png';
-import axios from 'axios';
 import { Link, Redirect } from 'react-router-dom';
 import Dialog from '../../components/Dialog/Dialog';
 import { login } from '../../store/actions/auth';
@@ -149,7 +147,7 @@ class Login extends Component {
 
   render() {
     const { open, isEmpty } = this.state;
-    const { classes, loading, isAuthenticate, error } = this.props;
+    const { classes, loading, isAuthenticate } = this.props;
     let authRedirect = null;
     if (isAuthenticate) {
       authRedirect = <Redirect to="/" />;

@@ -1,5 +1,10 @@
-export const AUTH_START = 'AUTH_START';
-export const AUTH_SUCCESS = 'AUTH_SUCCESS';
-export const AUTH_FAIL = 'AUTH_FAIL';
-export const AUTH_LOGIN = 'AUTH_LOGIN';
+// 登入、登出
+export const AUTH_LOGIN_START = 'AUTH_LOGIN_START';
+export const AUTH_LOGIN_SUCCESS = 'AUTH_LOGIN_SUCCESS';
+export const AUTH_LOGIN_FAIL = 'AUTH_LOGIN_FAIL';
 export const AUTH_LOGOUT = 'AUTH_LOGOUT';
+
+// 忘記密碼啦
+export const AUTH_FORGOT_START = 'AUTH_FORGOT_START';
+export const AUTH_FORGOT_SUCCESS = 'AUTH_FORGOT_SUCCESS';
+export const AUTH_FORGOT_FAIL = 'AUTH_FORGOT_FAIL';
