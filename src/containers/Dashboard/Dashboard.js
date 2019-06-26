@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
-// import axios from 'axios';
-// import Login from '../../components/Login/Login';
-// import { Redirect } from 'react-router-dom';
+import Devices from '../Devices/Devices';
 
 class Dashboard extends Component {
   componentDidMount() {
@@ -12,9 +10,9 @@ class Dashboard extends Component {
   }
   render() {
     return (
-      <div>
-        <h1>Dashboard</h1>
-      </div>
+      <>
+        <Devices />
+      </>
     );
   }
 }

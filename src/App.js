@@ -10,6 +10,7 @@ import Navbar from './components/NavBar/NavBar';
 import Login from './containers/Auth/Login';
 import Forgot from './containers/Auth/Forgot';
 import Edit from './containers/Auth/Edit';
+import History from './containers/History/History';
 import Logout from './containers/Auth/Logout';
 import { connect } from 'react-redux';
 import { authCheckState } from './store/actions/auth';
@@ -207,6 +208,7 @@ class App extends Component {
           <Route path="/forgot" component={Forgot} />
           <Route path="/edit" component={Dashboard} />
           <Route path="/logout" component={Logout} />
+          <Route path="/history/:address" component={History} />
         </Switch>
         {/* <Dashboard /> */}
       </BrowserRouter>

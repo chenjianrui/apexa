@@ -8,7 +8,6 @@ import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/styles';
 import Container from '@material-ui/core/Container';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import axios from 'axios';
 import { Link } from 'react-router-dom';
 import Dialog from '../../components/Dialog/Dialog';
 import { fetchForgot } from '../../store/actions/auth';
