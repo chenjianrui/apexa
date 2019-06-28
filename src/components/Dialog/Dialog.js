@@ -13,7 +13,7 @@ const styles = {
     padding: '20px'
   },
   button: {
-    background: 'linear-gradient(#00cccc, #04afaa)',
+    background: 'linear-gradient(#04afaa, #00cccc)',
     color: '#fff'
   },
   dialog: {

@@ -45,7 +45,7 @@ const styles = {
     }
   },
   submit: {
-    background: 'linear-gradient(#00cccc, #04afaa)',
+    background: 'linear-gradient(#04afaa, #00cccc)',
     color: '#fff',
     marginTop: '40px',
     '@media (max-width: 768px)': {
