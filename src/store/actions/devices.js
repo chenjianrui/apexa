@@ -20,7 +20,6 @@ export const fetchDevices = () => dispatch => {
   axiosInstance
     .get('getAllDeviceInfo')
     .then(response => {
-      console.log(response.data.allDeviceList);
       dispatch({
         type: actionTypes.FETCH_DEVICES_SUCCESS,
         payload: response.data.allDeviceList

@@ -37,7 +37,6 @@ class Devices extends Component {
   }
 }
 const mapStateToProps = state => {
-  console.log(state);
   return {
     loading: state.devices.loading,
     allDeviceList: state.devices.allDeviceList

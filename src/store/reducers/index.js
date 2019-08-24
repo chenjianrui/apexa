@@ -1,8 +1,10 @@
 import authReducer from './authReducer';
-import devicesReduce from './devicesReducer';
+import devicesReducer from './devicesReducer';
+import historyReducer from './historyReducer';
 import { combineReducers } from 'redux';
 
 export default combineReducers({
   auth: authReducer,
-  devices: devicesReduce
+  devices: devicesReducer,
+  history: historyReducer
 });
