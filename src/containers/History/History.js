@@ -86,6 +86,7 @@ class History extends Component {
   }
 
   componentWillUnmount() {
+    console.log('unmount');
     this.props.cleanDate(this.props.match.params.address);
   }
 
