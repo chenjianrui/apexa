@@ -45,7 +45,6 @@ export const authCheckState = () => dispatch => {
     dispatch(logout());
   } else {
     const userData = JSON.parse(localStorage.getItem('userData'));
-    console.log(userData);
     dispatch({ type: actionTypes.AUTH_LOGIN_SUCCESS, payload: userData });
   }
 };

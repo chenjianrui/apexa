@@ -23,3 +23,164 @@ body {
 .dashboard {
   background: none;
 }
+
+.styled-input-single {
+  position: relative;
+  padding: 4px 0 10px 40px;
+  text-align: left;
+}
+
+.styled-input-single label {
+  cursor: pointer;
+}
+
+.styled-input-single label:before,
+.styled-input-single label:after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  border-radius: 50%;
+}
+
+.styled-input-single label:before {
+  left: 0;
+  width: 25px;
+  height: 25px;
+  margin: -15px 0 0;
+  background: #ededed;
+  box-shadow: 0 0 1px grey;
+}
+
+.styled-input-single label:after {
+  left: 5px;
+  width: 15px;
+  height: 15px;
+  margin: -10px 0 0;
+  opacity: 0;
+  background: #00cccc;
+}
+
+.styled-input-single input[type='radio'] {
+  position: absolute;
+  top: 0;
+  left: -9999px;
+  visibility: hidden;
+}
+
+.styled-input-single input[type='radio']:checked + label:after {
+  opacity: 1;
+}
+
+.chart-wrapper {
+  width: 100%;
+  height: 400px;
+}
+
+.dateInput input {
+  text-align: center;
+  padding: 12px 30px;
+  font-size: 16px;
+  color: #cccccc;
+}
+
+/* .col_mp.span_1_of_3_mp.arrows_mp:nth-child(1) {
+  background-image: url('./assets/images/last_month.png');
+  background-size: 24px 24px;
+  background-repeat: no-repeat;
+}
+
+.col_mp.span_1_of_3_mp.arrows_mp {
+  background-image: url('./assets/images/next_month.png');
+  background-size: 24px 24px;
+  background-repeat: no-repeat;
+} */
+
+.calendar-container {
+  color: #666666;
+  /* width: 360px; */
+  position: absolute;
+  top: 0;
+  z-index: 2;
+  background: #fff;
+  border: 2px solid #eee;
+  border-bottom-right-radius: 5px;
+  border-bottom-left-radius: 5px;
+  padding: 30px 0;
+  border-radius: 10px;
+}
+
+/*  SECTIONS  */
+.section_mp {
+  clear: both;
+  padding: 0px;
+  margin: 0px;
+}
+
+/*  COLUMN SETUP  */
+.col_mp {
+  display: block;
+  float: left;
+  text-align: center;
+}
+
+.col_mp:first-child {
+  margin-left: 0;
+}
+
+/*  GROUPING  */
+.group_mp:before,
+.group:after {
+  content: '';
+  display: table;
+}
+
+.group_mp:after {
+  clear: both;
+}
+
+.group_mp {
+  zoom: 1;
+  /* For IE 6/7 */
+}
+
+/*  GRID OF THREE  */
+.span_1_of_3_mp {
+  width: 33.33%;
+}
+
+.col_mp.active {
+  background-color: #04afaa;
+  color: #00a3a3;
+  font-weight: 700;
+  border-radius: 20px;
+}
+
+.col_mp {
+  font-size: 12px;
+  padding-bottom: 10px;
+  padding-top: 10px;
+}
+
+.col_mp:hover {
+  color: white;
+  background-color: #04afaa;
+  cursor: pointer;
+  border-radius: 20px;
+}
+
+.selected_date_mp {
+  font-size: 12px;
+  color: #666666;
+  font-weight: bold;
+}
+
+.selected_cell.active {
+  background-color: #04afaa;
+  color: #ffffff;
+  font-weight: 500;
+}
+
+.arrows_mp {
+  font-weight: bold;
+  font-size: 18px;
+}

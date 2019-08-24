@@ -408,7 +408,6 @@ const screening = device => {
 
 const Device = ({ device, classes }) => {
   const upDateDevice = screening(device);
-  console.log(upDateDevice);
   return (
     <Grid item md={4} sm={6} xs={12}>
       <Link
