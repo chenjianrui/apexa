@@ -229,16 +229,6 @@ class Login extends Component {
                   <img src={iconFB} alt="icon_FB" className={classes.iconFB} />
                   Facebook
                 </Button>
-                <Button
-                  type="button"
-                  fullWidth
-                  variant="contained"
-                  onClick={this.handleDialogToggle}
-                  className={classes.facebook}
-                >
-                  <img src={iconFB} alt="icon_FB" className={classes.iconFB} />
-                  Facebook
-                </Button>
               </Grid>
             </form>
           </div>
