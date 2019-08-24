@@ -65,7 +65,7 @@ const styles = {
     margin: '30px 0 10px',
     '& a': {
       textDecoration: 'none',
-      color: '#00cccc'
+      color: 'red'
     }
   },
   line: {
