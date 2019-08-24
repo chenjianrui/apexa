@@ -166,7 +166,7 @@ class Login extends Component {
               登入
             </Typography>
             {isEmpty ? (
-              <p style={{ color: '#f26a55' }}>您的帳號或密碼不正確</p>
+              <p style={{ color: '#f26a55' }}>您的郵件帳號或密碼不正確</p>
             ) : null}
             <form noValidate onSubmit={this.handleSubmit}>
               <TextField
